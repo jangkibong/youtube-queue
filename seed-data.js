@@ -65,4 +65,39 @@ window.HARDCODED_PLAYLIST = [
         title: "하나님께서 당신을 통해",
         tags: [" day-1", "day-1 개회예배"],
     },
+    {
+        url: "https://youtu.be/X8uppHePd6g?si=kNTIvpYAzqsALGLb",
+        title: "우리 주 안에서 노래하며",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/5X4jDVpL0c4?si=58XvKqbIPiZ4NSEW",
+        title: "주 나와 함께 하시니",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/4bQS-67AMcM?si=F5cBCI0_ubgvUmWq",
+        title: "이것이 싸우는 방식",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/SKy0L7BVHzM?si=4ht9cawmiTcxrUUO",
+        title: "다시 한 번",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/S2EAWpK9QLA?si=XfNoTLMYm9YJQ4US",
+        title: "주의 도를",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/bLjXyihrW6k?si=L-dLwJdNS8FS7OES",
+        title: "기억하네 (시편 77편)",
+        tags: ["찬양집회"],
+    },
+    {
+        url: "https://youtu.be/C7s2MeQ122M?si=jxNMa6cuu7PkoVNm",
+        title: "주 사랑합니다",
+        tags: ["찬양집회"],
+    },
 ];
