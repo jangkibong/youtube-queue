@@ -406,7 +406,12 @@ input[type="url"]:focus {
     object-fit: cover;
     display: block;
 }
-
+.item-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
 .item-title {
     display: block;
     font-size: 1rem;
@@ -415,6 +420,7 @@ input[type="url"]:focus {
 
 .item-url {
     display: block;
+    display: none;
     color: var(--muted);
     font-size: 0.88rem;
     word-break: break-all;
@@ -437,8 +443,8 @@ input[type="url"]:focus {
 }
 
 .item-actions {
-  display: grid;
-  display: none;
+    display: grid;
+    display: none;
     gap: 8px;
 }
 
@@ -473,7 +479,7 @@ input[type="url"]:focus {
 
 @media (max-width: 1180px) {
     .layout-grid {
-      flex-direction: column;
+        flex-direction: column;
         /* grid-template-columns: 1fr 1fr; */
     }
 
