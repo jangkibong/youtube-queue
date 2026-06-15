@@ -8,7 +8,15 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/8cVZ-S3Z4-4?si=Q8JgiizqaKyff7eQ",
         title: "시편 150편",
-        tags: ["day-1", "day-1 개회예배", "day-1 저녁", "day-2", "day-2 오전", "day-2", "day-2 저녁"],
+        tags: [
+            "day-1",
+            "day-1 개회예배",
+            "day-1 저녁",
+            "day-2",
+            "day-2 오전",
+            "day-2",
+            "day-2 저녁",
+        ],
     },
     {
         url: "https://youtu.be/467UZU_pIt0?si=ksFAnMfdwVJvXB4t",
@@ -23,7 +31,7 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/QwDt_-TOmqU?si=UM3RX_-kaavhKU7O",
         title: "주의 사랑 곳곳에",
-        tags: ["day-1", "day-1 개회예배", "day-1 오전", "day-2", "day-2 저녁"],
+        tags: ["day-1", "day-1 개회예배", "day-1 오전", "day-2", "day-2 오전", "day-2 저녁"],
     },
     {
         url: "https://youtu.be/GoDfGIzFIyA?si=HR9v-FxCRcF3qM-B",
