@@ -8,12 +8,12 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/8cVZ-S3Z4-4?si=Q8JgiizqaKyff7eQ",
         title: "시편 150편",
-        tags: ["day-1", "day-1 개회예배", "day-1 저녁"],
+        tags: ["day-1", "day-1 개회예배", "day-1 저녁", "day-2", "day-2 오전", "day-2", "day-2 저녁"],
     },
     {
         url: "https://youtu.be/467UZU_pIt0?si=ksFAnMfdwVJvXB4t",
         title: "멈출 수 없네",
-        tags: ["day-1", "day-1 개회예배"],
+        tags: ["day-1", "day-1 개회예배", "day-2", "day-2 오전"],
     },
     {
         url: "https://youtu.be/57nP--pR44U?si=pIENPuWoZVMOedUh",
@@ -23,17 +23,17 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/QwDt_-TOmqU?si=UM3RX_-kaavhKU7O",
         title: "주의 사랑 곳곳에",
-        tags: ["day-1", "day-1 개회예배"],
+        tags: ["day-1", "day-1 개회예배", "day-1 오전", "day-2", "day-2 저녁"],
     },
     {
         url: "https://youtu.be/GoDfGIzFIyA?si=HR9v-FxCRcF3qM-B",
         title: "주를 바라보며",
-        tags: ["day-1", "day-1 저녁"],
+        tags: ["day-1", "day-1 저녁", "day-2", "day-2 오전"],
     },
     {
         url: "https://youtu.be/q8xhs4_Fsro?si=IcIbyMeO38vuUFQT",
         title: "주는 이 도시의 주",
-        tags: ["day-1", "day-1 개회예배"],
+        tags: ["day-1", "day-1 개회예배", "day-2", "day-2 오전"],
     },
     {
         url: "https://youtu.be/E8zbN1CQv8Y?si=o52C9WPZD7VJTXQj",
@@ -42,8 +42,8 @@ window.HARDCODED_PLAYLIST = [
     },
     {
         url: "https://youtu.be/TWJ8u4hdJ0M?si=kwOu2NLhblqMA9ZU",
-        title: "모든 열방 주 볼 때 까지",
-        tags: [],
+        title: "모든 열방 주 볼 때 까지 | 물이바다 덮음 같이",
+        tags: ["day-2", "day-2 저녁"],
     },
     {
         url: "https://youtu.be/NofJgBcYoHw?si=0f3zDj-wgYbcEkYt",
@@ -53,12 +53,12 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/82cXzwEB7sg?si=alOS-Cr9xSETjZot",
         title: "믿음의 입을 크게 열어",
-        tags: ["day-1", "day-1 저녁"],
+        tags: ["day-1", "day-1 저녁", " day-2 저녁"],
     },
     {
         url: "https://youtu.be/mOGh6vE-yD4?si=_Y5qtrBCYH7Dse0U",
         title: "주 안에 있는 나에게",
-        tags: [],
+        tags: ["day-2", "day-2 저녁"],
     },
     {
         url: "https://youtu.be/oOpdpesR4Sk?si=rtVACUehMt0aOG6V",
