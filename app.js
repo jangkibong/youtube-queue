@@ -1,16 +1,19 @@
+// 로컬 스토리지에 저장할 키와 전체 필터 이름
 const STORAGE_KEY = "yt-queue-board-v1";
 const ALL_FILTER = "__ALL__";
 
+// 애플리케이션의 전체 상태 관리 객체
 const state = {
-    items: [],
-    orders: { [ALL_FILTER]: [] },
-    selectedFilter: ALL_FILTER,
-    currentVideoId: null,
-    repeatAll: false,
-    playerReady: false,
-    isPlaying: false,
+    items: [], // 재생목록 항목들
+    orders: { [ALL_FILTER]: [] }, // 항목 순서를 저장하는 객체
+    selectedFilters: [], // 선택된 태그 필터들(다중 선택)
+    currentVideoId: null, // 현재 재생 항목 ID
+    repeatAll: false, // 전체 반복 모드 여부
+    playerReady: false, // 유튜브 플레이어 준비 여부
+    isPlaying: false, // 현재 재생 중인지 여부
 };
 
+// DOM 요소 참조 모음
 const els = {
     addForm: document.getElementById("addForm"),
     urlInput: document.getElementById("urlInput"),
@@ -40,8 +43,8 @@ const els = {
     runtimeNotice: document.getElementById("runtimeNotice"),
 };
 
-let player = null;
-let draggedId = null;
+let player = null; // YouTube IFrame API 플레이어 인스턴스
+let draggedId = null; // 드래그 순서 변경 시 사용되는 항목 ID
 
 function isHttpContext() {
     return window.location.protocol === "http:" || window.location.protocol === "https:";
@@ -71,7 +74,13 @@ function loadState() {
             parsed.orders && typeof parsed.orders === "object"
                 ? parsed.orders
                 : { [ALL_FILTER]: [] };
-        state.selectedFilter = parsed.selectedFilter || ALL_FILTER;
+        if (Array.isArray(parsed.selectedFilters)) {
+            state.selectedFilters = parsed.selectedFilters;
+        } else if (typeof parsed.selectedFilter === "string") {
+            state.selectedFilters = parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
+        } else {
+            state.selectedFilters = [];
+        }
         state.repeatAll = Boolean(parsed.repeatAll);
         state.currentVideoId = parsed.currentVideoId || null;
         state.isPlaying = false;
@@ -86,13 +95,14 @@ function saveState() {
         JSON.stringify({
             items: state.items.filter((item) => !item.isHardcoded),
             orders: state.orders,
-            selectedFilter: state.selectedFilter,
+            selectedFilters: state.selectedFilters,
             repeatAll: state.repeatAll,
             currentVideoId: state.currentVideoId,
         }),
     );
 }
 
+// 유튜브 URL에서 videoId를 추출하는 헬퍼
 function extractVideoId(input) {
     try {
         const url = new URL(input);
@@ -111,11 +121,13 @@ function extractVideoId(input) {
     }
 }
 
+// 쉼표로 구분된 태그 입력을 정리하고 중복을 제거
 function normalizeTags(raw) {
     const source = Array.isArray(raw) ? raw : String(raw || "").split(",");
     return [...new Set(source.map((tag) => String(tag).trim()).filter(Boolean))];
 }
 
+// 새 재생목록 항목 객체 생성
 function createItem({ url, title, tags }) {
     const videoId = extractVideoId(url);
     if (!videoId) {
@@ -159,16 +171,14 @@ function mergeHardcodedItems() {
     state.items = [...getHardcodedItems(), ...manualItems];
 }
 
+// 현재 재생목록에 포함된 모든 태그를 추출하여 정렬된 배열로 반환
 function getAllTags() {
     const tags = new Set();
     state.items.forEach((item) => item.tags.forEach((tag) => tags.add(tag)));
     return [...tags].sort((a, b) => a.localeCompare(b, "ko"));
 }
 
-function getFilterLabel(filterKey) {
-    return filterKey === ALL_FILTER ? "전체" : `태그: ${filterKey}`;
-}
-
+// 전체 목록 순서 배열에 빠진 항목을 추가
 function ensureAllOrder() {
     const allIds = state.items.map((item) => item.id);
     const existing = Array.isArray(state.orders[ALL_FILTER]) ? state.orders[ALL_FILTER] : [];
@@ -180,6 +190,7 @@ function ensureAllOrder() {
     state.orders[ALL_FILTER] = merged;
 }
 
+// 삭제되거나 태그가 사라진 항목을 정리하고, 필요 없는 필터 항목을 제거
 function pruneOrders() {
     const validIds = new Set(state.items.map((item) => item.id));
     Object.keys(state.orders).forEach((filterKey) => {
@@ -192,24 +203,46 @@ function pruneOrders() {
     ensureAllOrder();
 }
 
-function getVisibleItems(filterKey = state.selectedFilter) {
-    if (filterKey === ALL_FILTER) return [...state.items];
-    return state.items.filter((item) => item.tags.includes(filterKey));
+// 현재 선택된 필터에 따라 보여줄 항목 목록 반환
+function getVisibleItems(filterKeys = state.selectedFilters) {
+    if (!filterKeys.length) return [...state.items];
+    return state.items.filter((item) => item.tags.some((tag) => filterKeys.includes(tag)));
 }
 
-function getOrderedVisibleItems(filterKey = state.selectedFilter) {
-    const visibleItems = getVisibleItems(filterKey);
+// 필터 적용 후 순서를 보존한 항목 배열 반환
+function getOrderedVisibleItems(filterKeys = state.selectedFilters) {
+    const visibleItems = getVisibleItems(filterKeys);
     const visibleMap = new Map(visibleItems.map((item) => [item.id, item]));
-    const customOrder = state.orders[filterKey] || [];
-    const ordered = customOrder.map((id) => visibleMap.get(id)).filter(Boolean);
+    let ordered = [];
+
+    if (!filterKeys.length) {
+        ordered = (state.orders[ALL_FILTER] || []).map((id) => visibleMap.get(id)).filter(Boolean);
+    } else if (filterKeys.length === 1) {
+        ordered = (state.orders[filterKeys[0]] || []).map((id) => visibleMap.get(id)).filter(Boolean);
+    } else {
+        ordered = (state.orders[ALL_FILTER] || []).map((id) => visibleMap.get(id)).filter(Boolean);
+    }
+
     const existingIds = new Set(ordered.map((item) => item.id));
     const rest = visibleItems.filter((item) => !existingIds.has(item.id));
     return [...ordered, ...rest];
 }
 
+function getFilterLabel(filterKeys) {
+    if (!filterKeys.length) return "전체";
+    return `태그: ${filterKeys.join(", ")}`;
+}
+
 function setFilter(filterKey) {
-    state.selectedFilter = filterKey;
-    els.currentFilterBadge.textContent = getFilterLabel(filterKey);
+    if (filterKey === ALL_FILTER) {
+        state.selectedFilters = [];
+    } else if (state.selectedFilters.includes(filterKey)) {
+        state.selectedFilters = state.selectedFilters.filter((tag) => tag !== filterKey);
+    } else {
+        state.selectedFilters = [...state.selectedFilters, filterKey];
+    }
+
+    els.currentFilterBadge.textContent = getFilterLabel(state.selectedFilters);
     saveState();
     render();
 }
@@ -232,13 +265,18 @@ function renderFilters() {
     els.tagFilterContainer.innerHTML = "";
 
     document.querySelectorAll(".tag-chip[data-filter]").forEach((chip) => {
-        chip.classList.toggle("active", chip.dataset.filter === state.selectedFilter);
+        const filterKey = chip.dataset.filter;
+        const isActive =
+            filterKey === ALL_FILTER
+                ? state.selectedFilters.length === 0
+                : state.selectedFilters.includes(filterKey);
+        chip.classList.toggle("active", isActive);
     });
 
     tags.forEach((tag) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = `tag-chip ${state.selectedFilter === tag ? "active" : ""}`;
+        button.className = `tag-chip ${state.selectedFilters.includes(tag) ? "active" : ""}`;
         button.dataset.filter = tag;
         button.textContent = tag;
         button.addEventListener("click", () => setFilter(tag));
@@ -246,6 +284,7 @@ function renderFilters() {
     });
 }
 
+// 현재 필터와 순서에 따라 재생목록을 화면에 렌더링
 function renderQueue() {
     const items = getOrderedVisibleItems();
     els.queueList.innerHTML = "";
@@ -312,6 +351,7 @@ function renderQueue() {
     });
 }
 
+// 전체 반복 버튼 상태를 UI에 반영
 function renderRepeatButton() {
     els.repeatBtn.classList.toggle("active", state.repeatAll);
     els.repeatBtn.textContent = state.repeatAll ? "전체 반복 켜짐" : "전체 반복 꺼짐";
@@ -335,11 +375,8 @@ function reorderVisibleItems(sourceId, targetId) {
     const [moved] = cloned.splice(sourceIndex, 1);
     cloned.splice(targetIndex, 0, moved);
 
-    if (state.selectedFilter === ALL_FILTER) {
-        state.orders[ALL_FILTER] = cloned.map((item) => item.id);
-    } else {
-        state.orders[state.selectedFilter] = cloned.map((item) => item.id);
-    }
+    const activeOrderKey = state.selectedFilters.length === 1 ? state.selectedFilters[0] : ALL_FILTER;
+    state.orders[activeOrderKey] = cloned.map((item) => item.id);
 
     saveState();
     renderQueue();
@@ -431,16 +468,14 @@ function updateItem(itemId, { title, tags }) {
         if (!state.orders[tag].includes(item.id)) state.orders[tag].push(item.id);
     });
 
-    if (state.selectedFilter !== ALL_FILTER && !item.tags.includes(state.selectedFilter)) {
-        state.selectedFilter = ALL_FILTER;
-    }
+    state.selectedFilters = state.selectedFilters.filter((tag) => getAllTags().includes(tag));
 
     saveState();
     render();
 }
 
 function getCurrentVisibleQueue() {
-    return getOrderedVisibleItems(state.selectedFilter);
+    return getOrderedVisibleItems(state.selectedFilters);
 }
 
 function getNeighborItem(step) {
@@ -504,7 +539,7 @@ function exportData() {
         exportedAt: new Date().toISOString(),
         items: state.items.filter((item) => !item.isHardcoded),
         orders: state.orders,
-        selectedFilter: state.selectedFilter,
+        selectedFilters: state.selectedFilters,
         repeatAll: state.repeatAll,
     };
 
@@ -529,7 +564,13 @@ function importData(file) {
                 parsed.orders && typeof parsed.orders === "object"
                     ? parsed.orders
                     : { [ALL_FILTER]: [] };
-            state.selectedFilter = parsed.selectedFilter || ALL_FILTER;
+            if (Array.isArray(parsed.selectedFilters)) {
+                state.selectedFilters = parsed.selectedFilters;
+            } else if (typeof parsed.selectedFilter === "string") {
+                state.selectedFilters = parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
+            } else {
+                state.selectedFilters = [];
+            }
             state.repeatAll = Boolean(parsed.repeatAll);
             state.currentVideoId = null;
             mergeHardcodedItems();
@@ -545,6 +586,7 @@ function importData(file) {
     reader.readAsText(file);
 }
 
+// DOM 이벤트 핸들러를 연결하는 초기화 함수
 function bindEvents() {
     els.addForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -593,6 +635,7 @@ function bindEvents() {
         .addEventListener("click", () => setFilter(ALL_FILTER));
 }
 
+// YouTube IFrame API가 로드되었을 때 실행되는 초기 플레이어 설정 함수
 window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
     const playerVars = {
         rel: 0,
