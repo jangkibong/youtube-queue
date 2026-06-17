@@ -77,7 +77,8 @@ function loadState() {
         if (Array.isArray(parsed.selectedFilters)) {
             state.selectedFilters = parsed.selectedFilters;
         } else if (typeof parsed.selectedFilter === "string") {
-            state.selectedFilters = parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
+            state.selectedFilters =
+                parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
         } else {
             state.selectedFilters = [];
         }
@@ -218,7 +219,9 @@ function getOrderedVisibleItems(filterKeys = state.selectedFilters) {
     if (!filterKeys.length) {
         ordered = (state.orders[ALL_FILTER] || []).map((id) => visibleMap.get(id)).filter(Boolean);
     } else if (filterKeys.length === 1) {
-        ordered = (state.orders[filterKeys[0]] || []).map((id) => visibleMap.get(id)).filter(Boolean);
+        ordered = (state.orders[filterKeys[0]] || [])
+            .map((id) => visibleMap.get(id))
+            .filter(Boolean);
     } else {
         ordered = (state.orders[ALL_FILTER] || []).map((id) => visibleMap.get(id)).filter(Boolean);
     }
@@ -375,7 +378,8 @@ function reorderVisibleItems(sourceId, targetId) {
     const [moved] = cloned.splice(sourceIndex, 1);
     cloned.splice(targetIndex, 0, moved);
 
-    const activeOrderKey = state.selectedFilters.length === 1 ? state.selectedFilters[0] : ALL_FILTER;
+    const activeOrderKey =
+        state.selectedFilters.length === 1 ? state.selectedFilters[0] : ALL_FILTER;
     state.orders[activeOrderKey] = cloned.map((item) => item.id);
 
     saveState();
@@ -567,7 +571,8 @@ function importData(file) {
             if (Array.isArray(parsed.selectedFilters)) {
                 state.selectedFilters = parsed.selectedFilters;
             } else if (typeof parsed.selectedFilter === "string") {
-                state.selectedFilters = parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
+                state.selectedFilters =
+                    parsed.selectedFilter === ALL_FILTER ? [] : [parsed.selectedFilter];
             } else {
                 state.selectedFilters = [];
             }
