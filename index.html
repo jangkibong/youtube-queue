@@ -101,7 +101,7 @@
                     <div class="player-card">
                         <div id="player"></div>
                         <div class="now-playing">
-                            <p class="muted">현재 재생</p>
+                            <p class="muted hide">현재 재생</p>
                             <h3 id="nowPlayingTitle">재생할 영상을 선택해 주세요</h3>
                             <p id="nowPlayingMeta" class="muted">태그 없음</p>
                         </div>
@@ -117,8 +117,11 @@
                 <section class="panel queue-panel">
                     <div class="panel-head queue-head">
                         <div>
-                            <h2>List</h2>
-                            <p id="queueCount" class="subtle">0개 영상</p>
+                            <h2>List
+                                <p id="queueCount" class="subtle">
+                                    0개 영상
+                                </p>
+                            </h2>
                         </div>
                         <div class="queue-tools hide">
                             <button id="clearFilterBtn" class="ghost-btn small">전체 보기</button>

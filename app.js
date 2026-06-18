@@ -8,7 +8,7 @@ const state = {
     orders: { [ALL_FILTER]: [] }, // 항목 순서를 저장하는 객체
     selectedFilters: [], // 선택된 태그 필터들(다중 선택)
     currentVideoId: null, // 현재 재생 항목 ID
-    repeatAll: false, // 전체 반복 모드 여부
+    repeatMode: "off", // 반복 모드: 'off' | 'all' | 'one'
     playerReady: false, // 유튜브 플레이어 준비 여부
     isPlaying: false, // 현재 재생 중인지 여부
 };
@@ -82,7 +82,13 @@ function loadState() {
         } else {
             state.selectedFilters = [];
         }
-        state.repeatAll = Boolean(parsed.repeatAll);
+        if (typeof parsed.repeatMode === "string") {
+            state.repeatMode = ["off", "all", "one"].includes(parsed.repeatMode)
+                ? parsed.repeatMode
+                : "off";
+        } else {
+            state.repeatMode = Boolean(parsed.repeatAll) ? "all" : "off";
+        }
         state.currentVideoId = parsed.currentVideoId || null;
         state.isPlaying = false;
     } catch (error) {
@@ -97,7 +103,7 @@ function saveState() {
             items: state.items.filter((item) => !item.isHardcoded),
             orders: state.orders,
             selectedFilters: state.selectedFilters,
-            repeatAll: state.repeatAll,
+            repeatMode: state.repeatMode,
             currentVideoId: state.currentVideoId,
         }),
     );
@@ -291,7 +297,7 @@ function renderFilters() {
 function renderQueue() {
     const items = getOrderedVisibleItems();
     els.queueList.innerHTML = "";
-    els.queueCount.textContent = `${items.length}개 영상`;
+    els.queueCount.textContent = `( ${items.length} )`;
     els.emptyState.style.display = items.length ? "none" : "block";
 
     items.forEach((item) => {
@@ -356,8 +362,14 @@ function renderQueue() {
 
 // 전체 반복 버튼 상태를 UI에 반영
 function renderRepeatButton() {
-    els.repeatBtn.classList.toggle("active", state.repeatAll);
-    els.repeatBtn.textContent = state.repeatAll ? "전체 반복 켜짐" : "전체 반복 꺼짐";
+    els.repeatBtn.classList.toggle("active", state.repeatMode !== "off");
+    if (state.repeatMode === "off") {
+        els.repeatBtn.textContent = "반복: 끔";
+    } else if (state.repeatMode === "all") {
+        els.repeatBtn.textContent = "반복: 전체";
+    } else {
+        els.repeatBtn.textContent = "반복: 한곡";
+    }
 }
 
 function render() {
@@ -490,7 +502,7 @@ function getNeighborItem(step) {
 
     const nextIndex = currentIndex + step;
     if (nextIndex >= 0 && nextIndex < queue.length) return queue[nextIndex];
-    if (state.repeatAll) {
+    if (state.repeatMode === "all") {
         if (nextIndex < 0) return queue[queue.length - 1];
         if (nextIndex >= queue.length) return queue[0];
     }
@@ -544,7 +556,7 @@ function exportData() {
         items: state.items.filter((item) => !item.isHardcoded),
         orders: state.orders,
         selectedFilters: state.selectedFilters,
-        repeatAll: state.repeatAll,
+        repeatMode: state.repeatMode,
     };
 
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -576,7 +588,13 @@ function importData(file) {
             } else {
                 state.selectedFilters = [];
             }
-            state.repeatAll = Boolean(parsed.repeatAll);
+            if (typeof parsed.repeatMode === "string") {
+                state.repeatMode = ["off", "all", "one"].includes(parsed.repeatMode)
+                    ? parsed.repeatMode
+                    : "off";
+            } else {
+                state.repeatMode = Boolean(parsed.repeatAll) ? "all" : "off";
+            }
             state.currentVideoId = null;
             mergeHardcodedItems();
             pruneOrders();
@@ -614,7 +632,9 @@ function bindEvents() {
     els.nextBtn.addEventListener("click", playNext);
     els.playPauseBtn.addEventListener("click", togglePlayPause);
     els.repeatBtn.addEventListener("click", () => {
-        state.repeatAll = !state.repeatAll;
+        const next =
+            state.repeatMode === "off" ? "all" : state.repeatMode === "all" ? "one" : "off";
+        state.repeatMode = next;
         saveState();
         renderRepeatButton();
     });
@@ -679,11 +699,15 @@ window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
                     els.playPauseBtn.textContent = "재생";
                 }
                 if (event.data === YT.PlayerState.ENDED) {
-                    const nextItem = getNeighborItem(1);
-                    if (nextItem) playItem(nextItem.id, true);
-                    else {
-                        state.isPlaying = false;
-                        els.playPauseBtn.textContent = "재생";
+                    if (state.repeatMode === "one" && state.currentVideoId) {
+                        playItem(state.currentVideoId, true);
+                    } else {
+                        const nextItem = getNeighborItem(1);
+                        if (nextItem) playItem(nextItem.id, true);
+                        else {
+                            state.isPlaying = false;
+                            els.playPauseBtn.textContent = "재생";
+                        }
                     }
                 }
             },
