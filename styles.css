@@ -45,6 +45,20 @@ button {
     display: none !important;
 }
 
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: #ffffff46;
+    border: 1px solid transparent;
+    border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
 .app-shell {
     max-width: 1400px;
     margin: 0 auto;
@@ -497,7 +511,6 @@ input[type="url"]:focus {
         grid-column: 1 / -1;
     }
 }
-
 @media (max-width: 760px) {
     .eyebrow {
         margin-bottom: 0;
