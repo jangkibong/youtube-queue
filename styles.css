@@ -117,6 +117,10 @@ button {
     padding: 22px;
     flex: 1;
 }
+.player-panel {
+    position: sticky;
+    top: 20px;
+}
 
 .panel-head {
     display: flex;
@@ -314,15 +318,14 @@ input[type="url"]:focus {
 .tag-filter-wrap {
     display: flex;
     gap: 10px;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
     margin-bottom: 18px;
 }
 
 .tag-chip-list {
     display: flex;
     gap: 10px;
-    overflow: auto;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
 }
 
 .tag-chip {
@@ -525,6 +528,15 @@ input[type="url"]:focus {
 
     .queue-item {
         grid-template-columns: auto 1fr;
+    }
+
+    .tag-filter-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .tag-chip-list {
+        overflow: auto;
+        flex-wrap: nowrap;
     }
 
     .item-main {
