@@ -496,6 +496,14 @@ input[type="url"]:focus {
 }
 
 @media (max-width: 760px) {
+    .eyebrow {
+        margin-bottom: 0;
+        font-size: clamp(2.5vw, 2vw, 1.5rem);
+    }
+    h1 {
+        margin: 0.2rem 0 0.8rem;
+        font-size: clamp(6vw, 5vw, 2.4rem);
+    }
     .app-shell {
         padding: 20px 14px 36px;
     }
@@ -509,7 +517,7 @@ input[type="url"]:focus {
         grid-template-columns: 1fr;
     }
 
-    .now-playing p{
+    .now-playing p {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -533,12 +541,11 @@ input[type="url"]:focus {
     }
 
     .controls {
-        /* display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr)); */
+        gap: 8px;
     }
-    .controls .icon-btn{
-        font-size: 0.875rem;
-        padding: 12px;
+    .controls .icon-btn {
+        font-size: 14px;
+        padding: 8px 10px;
     }
 
     .icon-btn {
