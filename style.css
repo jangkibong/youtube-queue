@@ -543,14 +543,14 @@ input[type="url"]:focus {
         grid-template-columns: auto 1fr;
     }
 
-    .tag-filter-wrap {
+    /* .tag-filter-wrap {
         display: flex;
         flex-wrap: nowrap;
     }
     .tag-chip-list {
         overflow: auto;
         flex-wrap: nowrap;
-    }
+    } */
 
     .item-main {
         grid-template-columns: 66px 1fr;
