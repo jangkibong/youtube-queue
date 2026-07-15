@@ -31,12 +31,12 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/QwDt_-TOmqU?si=UM3RX_-kaavhKU7O",
         title: "주의 사랑 곳곳에",
-        tags: ["day-1", "day-1 개회예배", "day-2", "day-2 오전", "day-2 저녁"],
+        tags: ["day-1", "day-1 개회예배", "day-2", "day-2 오전", "day-2 저녁", "day-3", "폐회예배"],
     },
     {
         url: "https://youtu.be/GoDfGIzFIyA?si=HR9v-FxCRcF3qM-B",
         title: "주를 바라보며",
-        tags: ["day-1", "day-1 저녁", "day-2", "day-2 오전"],
+        tags: ["day-1", "day-1 저녁", "day-2", "day-2 오전", "day-3", "폐회예배"],
     },
     {
         url: "https://youtu.be/q8xhs4_Fsro?si=IcIbyMeO38vuUFQT",
@@ -51,7 +51,7 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/TWJ8u4hdJ0M?si=kwOu2NLhblqMA9ZU",
         title: "모든 열방 주 볼 때 까지 | 물이바다 덮음 같이",
-        tags: ["day-2", "day-2 저녁"],
+        tags: ["day-2", "day-2 저녁", "day-3", "폐회예배"],
     },
     {
         url: "https://youtu.be/NofJgBcYoHw?si=0f3zDj-wgYbcEkYt",
@@ -71,7 +71,7 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/oOpdpesR4Sk?si=rtVACUehMt0aOG6V",
         title: "하나님께서 당신을 통해",
-        tags: [" day-1", "day-1 개회예배"],
+        tags: [" day-1", "day-1 개회예배", "day-3", "폐회예배"],
     },
     {
         url: "https://youtu.be/X8uppHePd6g?si=kNTIvpYAzqsALGLb",
@@ -107,5 +107,10 @@ window.HARDCODED_PLAYLIST = [
         url: "https://youtu.be/C7s2MeQ122M?si=jxNMa6cuu7PkoVNm",
         title: "주 사랑합니다",
         tags: ["찬양집회"],
+    },
+    {
+        url: "나의 만족과 유익을 위해",
+        title: "https://youtu.be/IqeFk70GoB8?si=IDuwOHjilkRwsTEi",
+        tags: ["day-2 새벽예배"],
     },
 ];
