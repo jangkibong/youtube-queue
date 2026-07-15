@@ -119,6 +119,6 @@ window.HARDCODED_PLAYLIST = [
     {
         url: "https://youtu.be/IqeFk70GoB8?si=U_SCA0Wk_LIv18dH",
         title: "나의 만족과 유익을 위해",
-        tags: ["day-2","day-2 새벽예배"],
+        tags: ["day-2", "day-2 새벽"],
     },
 ];
